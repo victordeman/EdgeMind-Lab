@@ -1,0 +1,42 @@
+---
+title: Control GPIO from Python (LED + button)
+summary: Wire an LED and a push button to the Pi's GPIO header and control them from a short Python program.
+hardware: [raspberry-pi, linux]
+topics: [electronics, linux]
+difficulty: beginner
+estimatedMinutes: 75
+objectives:
+  - Identify power, ground and GPIO pins on the 40-pin header.
+  - Switch an LED on and off from Python with gpiozero.
+  - Read a push button and react to presses.
+  - Run a Python script from the shell and stop it cleanly.
+prerequisites:
+  labs: [rpi-linux-first-boot]
+  knowledge:
+    - Reading a simple breadboard circuit.
+bom:
+  - item: Raspberry Pi board with a 40-pin GPIO header
+    quantity: 1
+  - item: Solderless breadboard
+    quantity: 1
+  - item: LED
+    quantity: 1
+  - item: Current-limiting resistor
+    quantity: 1
+    notes: The value is given in the lab steps.
+  - item: Push button
+    quantity: 1
+  - item: Jumper wires (female to male)
+    quantity: 4
+safety:
+  - Shut the Pi down and remove power before changing any wiring.
+  - Never connect a GPIO pin directly to a 5V pin; GPIO pins use 3.3V logic.
+downloads: []
+references:
+  - label: gpiozero documentation
+    url: https://gpiozero.readthedocs.io/en/stable/
+  - label: Raspberry Pi documentation – Raspberry Pi hardware
+    url: https://www.raspberrypi.com/documentation/computers/raspberry-pi.html
+status: planned
+updated: 2026-11-13
+---

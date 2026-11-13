@@ -1,0 +1,36 @@
+---
+title: Read a sensor and print to Serial
+summary: Wire an analog sensor to an Arduino, read it in a loop and watch the values in the Serial Monitor.
+hardware: [arduino]
+topics: [electronics]
+difficulty: beginner
+estimatedMinutes: 60
+objectives:
+  - Wire an analog sensor to an analog input pin.
+  - Read the input with analogRead() and print it with Serial.println().
+  - Use the Serial Monitor to observe how the reading changes.
+  - Convert a raw reading into a voltage.
+prerequisites:
+  labs: [arduino-blink]
+  knowledge: []
+bom:
+  - item: Arduino board
+    quantity: 1
+  - item: USB cable that fits the board
+    quantity: 1
+  - item: Solderless breadboard
+    quantity: 1
+  - item: Potentiometer
+    quantity: 1
+    notes: Used as the analog sensor; the value is given in the lab steps.
+  - item: Jumper wires
+    quantity: 3
+safety:
+  - Unplug the USB cable before changing any wiring.
+downloads: []
+references:
+  - label: Arduino documentation – Analog Read Serial
+    url: https://docs.arduino.cc/built-in-examples/basics/AnalogReadSerial/
+status: planned
+updated: 2026-11-13
+---

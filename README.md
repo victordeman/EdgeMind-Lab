@@ -31,18 +31,19 @@ It is read in one place, `lib/site.ts`.
 
 ## Scripts
 
-| Script                 | What it does                              |
-| ---------------------- | ----------------------------------------- |
-| `npm run dev`          | Start the development server              |
-| `npm run build`        | Production build                          |
-| `npm run start`        | Serve the production build                |
-| `npm run lint`         | ESLint                                    |
-| `npm run lint:fix`     | ESLint with auto-fix                      |
-| `npm run typecheck`    | Generate route types, then `tsc --noEmit` |
-| `npm run format`       | Format with Prettier                      |
-| `npm run format:check` | Check formatting without writing          |
-| `npm test`             | Run the Vitest suite once                 |
-| `npm run test:watch`   | Run Vitest in watch mode                  |
+| Script                     | What it does                                       |
+| -------------------------- | -------------------------------------------------- |
+| `npm run dev`              | Start the development server                       |
+| `npm run build`            | Validate content, then production build            |
+| `npm run validate:content` | Check every file in `content/` against the schemas |
+| `npm run start`            | Serve the production build                         |
+| `npm run lint`             | ESLint                                             |
+| `npm run lint:fix`         | ESLint with auto-fix                               |
+| `npm run typecheck`        | Generate route types, then `tsc --noEmit`          |
+| `npm run format`           | Format with Prettier                               |
+| `npm run format:check`     | Check formatting without writing                   |
+| `npm test`                 | Run the Vitest suite once                          |
+| `npm run test:watch`       | Run Vitest in watch mode                           |
 
 Before opening a pull request, run:
 
@@ -51,6 +52,10 @@ npm run format:check && npm run lint && npm run typecheck && npm test && npm run
 ```
 
 CI runs the same checks on pull requests and on `main` once `.github/workflows/ci.yml` is committed.
+
+## Content
+
+Labs, learning paths, hardware pages and AI pages are MDX files in `content/`. Fields, validation rules and an annotated example lab are in [docs/CONTENT_MODEL.md](docs/CONTENT_MODEL.md). Invalid content fails `npm run build` with the file name and field.
 
 ## Notes for contributors and coding agents
 

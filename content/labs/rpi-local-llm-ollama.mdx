@@ -1,0 +1,42 @@
+---
+title: Run a local language model with Ollama on a Pi
+summary: Install Ollama on a Raspberry Pi, pull a small model and chat with it fully offline from the shell.
+hardware: [raspberry-pi, linux]
+topics: [language-models, linux]
+difficulty: intermediate
+estimatedMinutes: 90
+objectives:
+  - Install Ollama on Raspberry Pi OS.
+  - Pull a small model and run it from the command line.
+  - Send a request to the local Ollama HTTP API.
+  - Describe how model size, memory and response speed are related on small hardware.
+prerequisites:
+  labs: [rpi-linux-first-boot]
+  knowledge:
+    - Comfortable running commands in a Linux shell.
+bom:
+  - item: Raspberry Pi board running 64-bit Raspberry Pi OS
+    quantity: 1
+    notes: The amount of memory limits which models can run; the lab lists tested options.
+  - item: Power supply recommended for that Pi model
+    quantity: 1
+  - item: microSD card with free space for model files
+    quantity: 1
+  - item: Internet access for the install and model download
+    quantity: 1
+  - item: Heatsink or active cooler for the Pi
+    quantity: 1
+    optional: true
+safety:
+  - The Pi runs hot under sustained load; do not touch the processor or heatsink while a model is running.
+downloads: []
+references:
+  - label: Ollama documentation – Linux
+    url: https://docs.ollama.com/linux
+  - label: Ollama documentation – API
+    url: https://docs.ollama.com/api
+  - label: Ollama on GitHub
+    url: https://github.com/ollama/ollama
+status: planned
+updated: 2026-11-13
+---

@@ -1,0 +1,30 @@
+---
+title: Build a simple tool-calling agent loop
+summary: Write a small Python loop in which a local model picks a tool, your code runs it and the result goes back to the model.
+hardware: [raspberry-pi, linux]
+topics: [ai-agents, language-models]
+difficulty: intermediate
+estimatedMinutes: 120
+objectives:
+  - Describe the observe, decide, act loop of an agent.
+  - Define a tool as a Python function with a schema the model can read.
+  - Run a loop that executes the tool calls the model requests and returns the results.
+  - Add a step limit so the loop always ends.
+prerequisites:
+  labs: [rpi-local-llm-ollama]
+  knowledge:
+    - Basic Python (functions, lists, dictionaries).
+bom:
+  - item: Raspberry Pi board with Ollama installed
+    quantity: 1
+    notes: From the Ollama lab; the model must support tool calling.
+safety: []
+downloads: []
+references:
+  - label: Ollama documentation – Tool calling
+    url: https://docs.ollama.com/capabilities/tool-calling
+  - label: Ollama documentation – API
+    url: https://docs.ollama.com/api
+status: planned
+updated: 2026-11-13
+---

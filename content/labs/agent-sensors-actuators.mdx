@@ -1,0 +1,39 @@
+---
+title: An agent that reads a sensor and drives an actuator
+summary: Give the agent loop two hardware tools so it can read a GPIO input and switch an output in response to a request.
+hardware: [raspberry-pi, linux]
+topics: [ai-agents, electronics, robotics]
+difficulty: advanced
+estimatedMinutes: 120
+objectives:
+  - Wrap GPIO input and output as tools the agent can call.
+  - Limit what each tool is allowed to do before the model can use it.
+  - Log every tool call so the agent's behaviour can be reviewed.
+prerequisites:
+  labs: [rpi-gpio-python, rpi-first-agent]
+  knowledge: []
+bom:
+  - item: Raspberry Pi board with Ollama installed
+    quantity: 1
+  - item: Solderless breadboard
+    quantity: 1
+  - item: LED
+    quantity: 1
+  - item: Current-limiting resistor
+    quantity: 1
+  - item: Push button
+    quantity: 1
+  - item: Jumper wires (female to male)
+    quantity: 4
+safety:
+  - Shut the Pi down and remove power before changing any wiring.
+  - Test each hardware tool by hand before letting the model call it.
+downloads: []
+references:
+  - label: Ollama documentation – Tool calling
+    url: https://docs.ollama.com/capabilities/tool-calling
+  - label: gpiozero documentation
+    url: https://gpiozero.readthedocs.io/en/stable/
+status: planned
+updated: 2026-11-13
+---

@@ -1,0 +1,9 @@
+---
+title: AI Agents
+summary: Put a language model in a loop with tools it can call, then connect those tools to sensors and actuators.
+references:
+  - label: Ollama documentation – Tool calling
+    url: https://docs.ollama.com/capabilities/tool-calling
+---
+
+An AI agent is a language model that can call tools and use the results to decide what to do next. The labs in this section build the agent loop in plain Python so each step can be inspected, then give the agent tools that read and control hardware. Each lab sets explicit limits on what the agent may do, because an agent connected to hardware acts in the physical world.

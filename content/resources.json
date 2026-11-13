@@ -1,0 +1,37 @@
+[
+  {
+    "title": "Arduino documentation",
+    "description": "Official guides, language reference and built-in examples for Arduino boards and the Arduino IDE.",
+    "category": "link",
+    "href": "https://docs.arduino.cc/",
+    "hardware": ["arduino"]
+  },
+  {
+    "title": "Raspberry Pi documentation",
+    "description": "Official documentation for Raspberry Pi computers, Raspberry Pi OS, configuration and remote access.",
+    "category": "link",
+    "href": "https://www.raspberrypi.com/documentation/",
+    "hardware": ["raspberry-pi", "linux"]
+  },
+  {
+    "title": "gpiozero documentation",
+    "description": "Reference and recipes for the Python library used in the Raspberry Pi GPIO labs.",
+    "category": "link",
+    "href": "https://gpiozero.readthedocs.io/en/stable/",
+    "hardware": ["raspberry-pi"]
+  },
+  {
+    "title": "Ollama documentation",
+    "description": "Install guides, API reference and tool-calling documentation for running language models locally.",
+    "category": "link",
+    "href": "https://docs.ollama.com/",
+    "hardware": ["raspberry-pi", "linux"]
+  },
+  {
+    "title": "Creality Wiki – Ender-3 V3 SE user guide",
+    "description": "Manufacturer's user manual, material guide and troubleshooting pages for the Ender-3 V3 SE.",
+    "category": "link",
+    "href": "https://wiki.creality.com/en/ender-series/ender-3-v3-se",
+    "hardware": ["ender-3"]
+  }
+]
