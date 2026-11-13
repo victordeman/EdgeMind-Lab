@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EdgeMind Lab
 
-## Getting Started
+Website for the EdgeMind Lab at WIGWE UNIVERSITY – College of Science and Computing: hands-on labs and exercises in Arduino, Raspberry Pi + Linux, language models, AI agents and Ender-3 V3 SE 3D printing for robotics.
 
-First, run the development server:
+## Stack
+
+- Next.js (App Router) + TypeScript
+- Tailwind CSS v4 + shadcn/ui
+- Vitest, ESLint, Prettier
+- Hosted on Vercel
+
+## Local setup
+
+Requires Node.js 22 (see `.nvmrc`).
 
 ```bash
+npm ci
+cp .env.example .env.local   # optional
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Name                   | Purpose                                             | Default                 |
+| ---------------------- | --------------------------------------------------- | ----------------------- |
+| `NEXT_PUBLIC_SITE_URL` | Public base URL used for metadata and absolute URLs | `http://localhost:3000` |
 
-## Learn More
+It is read in one place, `lib/site.ts`.
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Script                 | What it does                              |
+| ---------------------- | ----------------------------------------- |
+| `npm run dev`          | Start the development server              |
+| `npm run build`        | Production build                          |
+| `npm run start`        | Serve the production build                |
+| `npm run lint`         | ESLint                                    |
+| `npm run lint:fix`     | ESLint with auto-fix                      |
+| `npm run typecheck`    | Generate route types, then `tsc --noEmit` |
+| `npm run format`       | Format with Prettier                      |
+| `npm run format:check` | Check formatting without writing          |
+| `npm test`             | Run the Vitest suite once                 |
+| `npm run test:watch`   | Run Vitest in watch mode                  |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Before opening a pull request, run:
 
-## Deploy on Vercel
+```bash
+npm run format:check && npm run lint && npm run typecheck && npm test && npm run build
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+CI runs the same checks on pull requests and on `main` once `.github/workflows/ci.yml` is committed.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes for contributors and coding agents
+
+This project uses a recent Next.js release whose conventions differ from older versions. Read the relevant guide in `node_modules/next/dist/docs/` before changing routing, metadata or configuration (see `AGENTS.md`).
