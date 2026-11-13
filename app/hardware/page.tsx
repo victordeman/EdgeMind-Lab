@@ -1,7 +1,7 @@
+import { CardGrid, LinkCard } from "@/components/layout/link-card";
 import { PageHeader } from "@/components/layout/page-header";
-import { PageLinkList } from "@/components/layout/page-link-list";
 import { PageShell } from "@/components/layout/page-shell";
-import { getHubs } from "@/lib/content";
+import { getHubs, getLabsByHardware } from "@/lib/content";
 import { pageMetadata } from "@/lib/metadata";
 import { getSection } from "@/lib/sections";
 
@@ -17,13 +17,25 @@ export default function HardwarePage() {
         description={section.description}
         breadcrumbs={[{ label: section.title }]}
       />
-      <PageLinkList
-        items={getHubs().map(({ slug, title, summary }) => ({
-          href: `/hardware/${slug}`,
-          title,
-          summary,
-        }))}
-      />
+      <CardGrid>
+        {getHubs().map(({ slug, title, summary }) => {
+          const count = getLabsByHardware(slug).length;
+          return (
+            <li key={slug}>
+              <LinkCard
+                href={`/hardware/${slug}`}
+                title={title}
+                summary={summary}
+                footer={
+                  <span className="text-muted-foreground">
+                    {count} {count === 1 ? "lab" : "labs"}
+                  </span>
+                }
+              />
+            </li>
+          );
+        })}
+      </CardGrid>
     </PageShell>
   );
 }

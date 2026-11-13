@@ -115,6 +115,10 @@ Write theme-specific styles with the `dark:` variant only when a token cannot ex
 
 These started from shadcn/ui and were trimmed. If you add another shadcn component, remove its animation classes and check that it imports `cn` from `@/lib/utils`.
 
+### Page components
+
+`components/layout/link-card.tsx` (`LinkCard`, `CardGrid`), `lab-link-list.tsx` and `related-sections.tsx` build hub, AI and home pages. `components/path/` holds `PathCard`, `ModuleList` and `PathProgress` (always "0 of N" until Phase 7). `components/resources/` holds `ResourceList` and the client `ResourceBrowser`, whose hardware filter lives in the URL like the lab filters. A card's title link covers the whole card with an `after:` pseudo-element.
+
 ### Lab components (`components/lab/`)
 
 Used only by `/labs` and `/labs/[slug]`. `LabHeader`, `StatusNotice` (draft: "Not yet bench-verified"; planned: "Coming soon"), `LabOverview`, `BomTable`, `SafetyCallout`, `DownloadList`, `ReferenceList`, `LabNav`, `TableOfContents` (a `<details>` on mobile, sticky at `xl`) and the MDX components listed in `docs/CONTENT_MODEL.md`. `LabBrowser` and `LabFilters` are client components; the static `/labs` page shows the full list until they hydrate, so it works without JavaScript.

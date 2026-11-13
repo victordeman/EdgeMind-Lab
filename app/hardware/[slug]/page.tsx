@@ -1,9 +1,23 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { LabBody } from "@/components/lab/mdx";
 import { PageHeader } from "@/components/layout/page-header";
 import { PageShell } from "@/components/layout/page-shell";
-import { getHub, getHubs } from "@/lib/content";
+import { RelatedSections } from "@/components/layout/related-sections";
+import {
+  getHub,
+  getHubs,
+  getLabs,
+  getLabsByHardware,
+  getPaths,
+  getResources,
+} from "@/lib/content";
+import {
+  collectResources,
+  pathsForHardware,
+  resourcesForHardware,
+} from "@/lib/derive";
 import { pageMetadata } from "@/lib/metadata";
 import { getSection } from "@/lib/sections";
 
@@ -36,6 +50,12 @@ export default async function HardwareHubPage({
   const page = getHub(slug);
   if (!page) notFound();
 
+  const labs = getLabsByHardware(page.slug);
+  const resources = resourcesForHardware(
+    collectResources(getLabs(), getResources()),
+    page.slug,
+  );
+
   return (
     <PageShell>
       <PageHeader
@@ -45,6 +65,14 @@ export default async function HardwareHubPage({
           { label: section.title, href: section.href },
           { label: page.title },
         ]}
+      />
+      <LabBody source={page.body} />
+      <RelatedSections
+        idPrefix="hub"
+        labs={labs}
+        paths={pathsForHardware(getPaths(), getLabs(), page.slug)}
+        resources={resources}
+        references={page.references}
       />
     </PageShell>
   );
