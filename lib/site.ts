@@ -10,6 +10,11 @@ export type NavItem = {
   href: string;
 };
 
+/** True when `pathname` is the nav item's page or a page below it. */
+export function isActiveNavItem(pathname: string, item: NavItem): boolean {
+  return pathname === item.href || pathname.startsWith(`${item.href}/`);
+}
+
 export const site = {
   name: "EdgeMind Lab",
   institution: "WIGWE UNIVERSITY – College of Science and Computing",
