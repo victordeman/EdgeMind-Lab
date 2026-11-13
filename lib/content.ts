@@ -65,14 +65,24 @@ const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /** H2 headings of an MDX body, ignoring fenced code blocks. */
 export function extractH2Headings(body: string): string[] {
   const headings: string[] = [];
-  let fence: string | null = null;
+  let fence: { marker: string; length: number } | null = null;
   for (const line of body.split(/\r?\n/)) {
-    const fenceMatch = /^\s*(`{3,}|~{3,})/.exec(line);
+    const fenceMatch = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
     if (fenceMatch) {
-      const marker = fenceMatch[1][0];
-      if (fence === null) fence = marker;
-      else if (fence === marker) fence = null;
-      continue;
+      const [, run, rest] = fenceMatch;
+      if (fence === null) {
+        fence = { marker: run[0], length: run.length };
+        continue;
+      }
+      // A fence closes only on the same character, at least as long, with nothing after it.
+      if (
+        run[0] === fence.marker &&
+        run.length >= fence.length &&
+        rest.trim() === ""
+      ) {
+        fence = null;
+        continue;
+      }
     }
     if (fence !== null) continue;
     const headingMatch = /^##\s+(.+?)\s*#*\s*$/.exec(line);

@@ -659,6 +659,29 @@ describe("validation errors name the file and the field", () => {
 });
 
 describe("extractH2Headings", () => {
+  it("keeps a longer fence open across shorter fences inside it", () => {
+    const body = [
+      "## Steps",
+      "````mdx",
+      "```bash",
+      "## Troubleshooting",
+      "```",
+      "## Expected outcome",
+      "````",
+      "## Expected outcome",
+      "```text",
+      "```not a closing fence",
+      "## Steps",
+      "```",
+      "## Troubleshooting",
+    ].join("\n");
+    expect(extractH2Headings(body)).toEqual([
+      "Steps",
+      "Expected outcome",
+      "Troubleshooting",
+    ]);
+  });
+
   it("returns H2 headings only and ignores fenced code", () => {
     const body = [
       "# Title",
