@@ -4,6 +4,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import type { z } from "zod";
 
+import { proseLines } from "@/lib/mdx-text";
 import {
   AI_PAGES,
   HARDWARE,
@@ -65,30 +66,31 @@ const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /** H2 headings of an MDX body, ignoring fenced code blocks. */
 export function extractH2Headings(body: string): string[] {
   const headings: string[] = [];
-  let fence: { marker: string; length: number } | null = null;
-  for (const line of body.split(/\r?\n/)) {
-    const fenceMatch = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
-    if (fenceMatch) {
-      const [, run, rest] = fenceMatch;
-      if (fence === null) {
-        fence = { marker: run[0], length: run.length };
-        continue;
-      }
-      // A fence closes only on the same character, at least as long, with nothing after it.
-      if (
-        run[0] === fence.marker &&
-        run.length >= fence.length &&
-        rest.trim() === ""
-      ) {
-        fence = null;
-        continue;
-      }
-    }
-    if (fence !== null) continue;
+  for (const line of proseLines(body)) {
     const headingMatch = /^##\s+(.+?)\s*#*\s*$/.exec(line);
     if (headingMatch) headings.push(headingMatch[1]);
   }
   return headings;
+}
+
+/** `file="…"` values of every `<CodeFile>` tag outside fenced code blocks. */
+export function extractCodeFileRefs(body: string): string[] {
+  const refs: string[] = [];
+  for (const line of proseLines(body)) {
+    for (const match of line.matchAll(/<CodeFile\b[^>]*\bfile="([^"]*)"/g)) {
+      refs.push(match[1]);
+    }
+  }
+  return refs;
+}
+
+/** Counts lines outside code fences that match `pattern`. */
+function countProseMatches(body: string, pattern: RegExp): number {
+  let count = 0;
+  for (const line of proseLines(body)) {
+    count += [...line.matchAll(pattern)].length;
+  }
+  return count;
 }
 
 function formatFieldPath(pathSegments: PropertyKey[]): string {
@@ -267,6 +269,41 @@ export function createContentStore({ rootDir }: ContentStoreOptions) {
         cursor = index;
       }
     }
+
+    // The page template renders the one H1; a body H1 would make a second.
+    if (countProseMatches(lab.body, /^#\s+\S/gm) > 0) {
+      issues.push({
+        file,
+        field: "body",
+        message:
+          'a lab body must not contain an H1 ("# …"); the page renders the title',
+      });
+    }
+
+    // Step anchors are numbered per page, so one <Steps> block keeps them unique.
+    if (countProseMatches(lab.body, /<Steps\b/g) > 1) {
+      issues.push({
+        file,
+        field: "body",
+        message: "a lab body may contain only one <Steps> block",
+      });
+    }
+
+    extractCodeFileRefs(lab.body).forEach((ref, index) => {
+      if (!ref.startsWith("/code/")) {
+        issues.push({
+          file,
+          field: `body.CodeFile.${index}`,
+          message: `<CodeFile> files must be under public/code/, got "${ref}"`,
+        });
+      } else if (!publicFileExists(ref)) {
+        issues.push({
+          file,
+          field: `body.CodeFile.${index}`,
+          message: `file not found: public${ref}`,
+        });
+      }
+    });
   }
 
   function checkPaths(
@@ -451,6 +488,43 @@ export function createContentStore({ rootDir }: ContentStoreOptions) {
       .reduce((total, lab) => total + lab.estimatedMinutes, 0);
   }
 
+  /** Text of a file under `public/`, or `undefined` when it does not exist. */
+  function readPublicTextFile(href: string): string | undefined {
+    if (!publicFileExists(href)) return undefined;
+    return fs.readFileSync(
+      path.join(publicDir, ...href.split("/").filter(Boolean)),
+      "utf8",
+    );
+  }
+
+  /** Size in bytes of a file under `public/`, or `undefined` when it does not exist. */
+  function getPublicFileSize(href: string): number | undefined {
+    if (!publicFileExists(href)) return undefined;
+    return fs.statSync(path.join(publicDir, ...href.split("/").filter(Boolean)))
+      .size;
+  }
+
+  /**
+   * Other written labs that share hardware or topics with `slug`, most shared
+   * tags first. Planned labs and the lab itself are left out.
+   */
+  function getRelatedLabs(slug: string, limit = 3): Lab[] {
+    const lab = getLab(slug);
+    if (!lab) return [];
+    const score = (other: Lab) =>
+      other.hardware.filter((value) => lab.hardware.includes(value)).length +
+      other.topics.filter((value) => lab.topics.includes(value)).length;
+    return getLabs()
+      .filter((other) => other.slug !== slug && other.status !== "planned")
+      .map((other) => ({ other, score: score(other) }))
+      .filter(({ score: value }) => value > 0)
+      .sort(
+        (a, b) => b.score - a.score || a.other.slug.localeCompare(b.other.slug),
+      )
+      .slice(0, limit)
+      .map(({ other }) => other);
+  }
+
   return {
     load,
     getLabs,
@@ -469,6 +543,9 @@ export function createContentStore({ rootDir }: ContentStoreOptions) {
     getPathForLab,
     getNextPrevLab,
     getPathMinutes,
+    getRelatedLabs,
+    readPublicTextFile,
+    getPublicFileSize,
   };
 }
 
@@ -493,4 +570,7 @@ export const {
   getPathForLab,
   getNextPrevLab,
   getPathMinutes,
+  getRelatedLabs,
+  readPublicTextFile,
+  getPublicFileSize,
 } = store;

@@ -17,31 +17,144 @@ prerequisites:
 bom:
   - item: Arduino board
     quantity: 1
-    notes: Any board supported by the Arduino IDE with a built-in LED.
+    notes: Any board supported by the Arduino IDE with a built-in LED. Check your kit for the model.
   - item: USB cable that fits the board
     quantity: 1
   - item: Solderless breadboard
     quantity: 1
     optional: true
+    notes: Only for the external-LED extension.
   - item: LED
     quantity: 1
     optional: true
     notes: Only for the external-LED extension.
-  - item: Current-limiting resistor
+  - item: 220 ohm resistor
     quantity: 1
     optional: true
-    notes: Only for the external-LED extension; the value is given in the lab steps.
+    notes: The value the Arduino Blink example uses with an UNO R3 (a 5 V board). Only for the external-LED extension.
   - item: Jumper wires
     quantity: 2
     optional: true
+    notes: Only for the external-LED extension.
 safety:
   - Unplug the USB cable before changing any wiring.
-downloads: []
+  - Always put a resistor in series with an LED. Without one the LED and the board's pin can be damaged.
+downloads:
+  - label: blink.ino (Arduino sketch)
+    file: /code/arduino-blink/blink.ino
+    kind: code
 references:
   - label: Arduino documentation – Blink
     url: https://docs.arduino.cc/built-in-examples/basics/Blink/
   - label: Arduino documentation – Downloading and installing Arduino IDE 2
     url: https://docs.arduino.cc/software/ide-v2/tutorials/getting-started/ide-v2-downloading-and-installing/
-status: planned
+  - label: Arduino documentation – LED_BUILTIN
+    url: https://docs.arduino.cc/language-reference/en/variables/constants/ledbuiltin/
+  - label: Arduino language reference (pinMode, digitalWrite, delay)
+    url: https://docs.arduino.cc/language-reference/
+status: draft
 updated: 2026-11-13
 ---
+
+## Steps
+
+<Steps>
+
+<Step title="Install the Arduino IDE">
+
+Follow the official guide linked under References to download and install Arduino IDE 2, then start it.
+
+</Step>
+
+<Step title="Connect the board and select it">
+
+1. Plug the board into your computer with the USB cable.
+2. Choose your board with **Tools > Board**. Check your kit for the board model.
+3. Choose the board's port with **Tools > Port**.
+
+</Step>
+
+<Step title="Run the built-in Blink example">
+
+Open **File > Examples > 01.Basics > Blink** and click **Upload**. The on-board LED should switch on for one second and off for one second, repeatedly. If it does, your board, port and IDE all work.
+
+</Step>
+
+<Step title="Read and upload your own sketch">
+
+Create a new sketch with **File > New Sketch**, replace its contents with the sketch below (or download it), and click **Upload**. It does the same job as the built-in example, with the timing in a named value.
+
+<CodeFile file="/code/arduino-blink/blink.ino" />
+
+- `setup()` runs once when the board starts. `pinMode(LED_PIN, OUTPUT)` makes the pin an output.
+- `loop()` runs again and again. `digitalWrite` sets the pin `HIGH` (LED on) or `LOW` (LED off), and `delay` pauses for a number of milliseconds.
+- `LED_BUILTIN` is the number of the pin the on-board LED uses. Most boards connect it to digital pin 13.
+
+</Step>
+
+<Step title="Change the timing">
+
+Change `INTERVAL_MS` to `250`. Before you upload, predict how many blinks per second you will see. Upload and check your prediction, then try `100` and `2000`.
+
+</Step>
+
+<Step title="Optional: blink an external LED">
+
+Unplug the USB cable first. The sketch drives the pin that `LED_BUILTIN` names, so an external LED on that pin blinks along with the on-board one. On an UNO that pin is 13; on any other board, check its documentation.
+
+<Wiring>
+  <Connection
+    from="Board pin named by LED_BUILTIN"
+    to="One end of the 220 ohm resistor"
+    notes="Pin 13 on an UNO."
+  />
+  <Connection
+    from="Other end of the resistor"
+    to="LED long leg (anode)"
+    notes="The long leg is the positive one."
+  />
+  <Connection
+    from="LED short leg (cathode)"
+    to="Board GND"
+    notes="Any GND pin."
+  />
+</Wiring>
+
+Plug the USB cable back in. The external LED should blink with the on-board LED.
+
+</Step>
+
+</Steps>
+
+## Expected outcome
+
+<ExpectedOutcome>
+
+The on-board LED is on for one interval and off for one interval, repeatedly. When you change `INTERVAL_MS` and upload again, the blink rate changes as you predicted. With the optional circuit built, the external LED blinks in step with the on-board LED.
+
+</ExpectedOutcome>
+
+## Troubleshooting
+
+<Troubleshooting>
+  <Issue
+    symptom="The port you expect is not listed under Tools > Port"
+    cause="The USB cable may carry power only, the board may not be plugged in, or your computer may not recognise the board yet."
+    fix="Try a different USB data cable, replug the board and open the Tools > Port menu again. Check your board's documentation for any driver it needs."
+  />
+  <Issue
+    symptom="The upload fails with an error"
+    cause="The wrong board or port is selected."
+    fix="Choose your board under Tools > Board and its port under Tools > Port, then upload again."
+  />
+  <Issue
+    symptom="The sketch does not compile"
+    cause="A typo, such as a missing semicolon or bracket."
+    fix="Read the first error line in the IDE's console; it names the line to check. Compare your code with the downloadable blink.ino."
+  />
+  <Issue
+    symptom="The external LED stays dark"
+    cause="The LED is the wrong way round, or a wire is not connected."
+    fix="Unplug the USB cable, swap the LED's legs so the long leg faces the resistor, and recheck each connection against the wiring table."
+  />
+</Troubleshooting>
