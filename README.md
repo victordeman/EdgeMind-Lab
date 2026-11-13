@@ -44,6 +44,7 @@ It is read in one place, `lib/site.ts`.
 | `npm run format:check`     | Check formatting without writing                   |
 | `npm test`                 | Run the Vitest suite once                          |
 | `npm run test:watch`       | Run Vitest in watch mode                           |
+| `npm run test:e2e`         | Run the Playwright smoke test against the build    |
 
 Before opening a pull request, run:
 
@@ -52,6 +53,17 @@ npm run format:check && npm run lint && npm run typecheck && npm test && npm run
 ```
 
 CI runs the same checks on pull requests and on `main` once `.github/workflows/ci.yml` is committed.
+
+The Playwright smoke test visits every route in a real browser and runs an axe accessibility check. It needs a production build and, once per machine, a browser download:
+
+```bash
+npx playwright install chromium
+npm run build && npm run test:e2e
+```
+
+## Design system
+
+Colour tokens, typography, layout components and usage rules are in [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md).
 
 ## Content
 
