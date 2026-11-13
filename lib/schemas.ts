@@ -52,9 +52,17 @@ const publicFile = z
     message: "must not contain .. segments",
   });
 
+function isCalendarDate(value: string): boolean {
+  const date = new Date(`${value}T00:00:00Z`);
+  return !Number.isNaN(date.getTime()) && date.toISOString().startsWith(value);
+}
+
 const isoDate = z.preprocess(
   (value) => (value instanceof Date ? value.toISOString().slice(0, 10) : value),
-  z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "must be an ISO date (YYYY-MM-DD)"),
+  z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "must be an ISO date (YYYY-MM-DD)")
+    .refine(isCalendarDate, { message: "must be a real calendar date" }),
 );
 
 export const referenceSchema = z.strictObject({

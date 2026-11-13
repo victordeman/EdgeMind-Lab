@@ -556,6 +556,32 @@ describe("validation errors name the file and the field", () => {
     ).toBe(true);
   });
 
+  it.each(["2026-13-01", "2026-02-30", "2026-00-10", "2025-02-29"])(
+    "rejects the impossible date %s",
+    (updated) => {
+      const files = validFiles();
+      files["content/labs/lab-a.mdx"] = mdx(labFrontmatter({ updated }), BODY);
+
+      expect(issuesOf(files)).toEqual([
+        {
+          file: "content/labs/lab-a.mdx",
+          field: "updated",
+          message: "must be a real calendar date",
+        },
+      ]);
+    },
+  );
+
+  it("accepts a leap day", () => {
+    const files = validFiles();
+    files["content/labs/lab-a.mdx"] = mdx(
+      labFrontmatter({ updated: "2024-02-29" }),
+      BODY,
+    );
+    const store = createContentStore({ rootDir: project(files) });
+    expect(store.getLab("lab-a")?.updated).toBe("2024-02-29");
+  });
+
   it("requires a safety note on written Ender-3 labs", () => {
     const files = validFiles();
     files["content/labs/lab-a.mdx"] = mdx(
