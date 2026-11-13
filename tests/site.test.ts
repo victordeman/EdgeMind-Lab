@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { resolveSiteUrl, site } from "@/lib/site";
+import { isActiveNavItem, resolveSiteUrl, site } from "@/lib/site";
 
 describe("site constants", () => {
   it("names the lab and the institution", () => {
@@ -30,5 +30,20 @@ describe("resolveSiteUrl", () => {
 
   it("strips trailing slashes", () => {
     expect(resolveSiteUrl("https://example.org/")).toBe("https://example.org");
+  });
+});
+
+describe("isActiveNavItem", () => {
+  const labs = { label: "Labs", href: "/labs" };
+
+  it("matches the section page and the pages below it", () => {
+    expect(isActiveNavItem("/labs", labs)).toBe(true);
+    expect(isActiveNavItem("/labs/arduino-blink", labs)).toBe(true);
+  });
+
+  it("does not match other sections that share a prefix", () => {
+    expect(isActiveNavItem("/", labs)).toBe(false);
+    expect(isActiveNavItem("/labs-archive", labs)).toBe(false);
+    expect(isActiveNavItem("/paths", labs)).toBe(false);
   });
 });
