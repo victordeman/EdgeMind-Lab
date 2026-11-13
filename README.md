@@ -50,7 +50,7 @@ Before opening a pull request, run:
 npm run format:check && npm run lint && npm run typecheck && npm test && npm run build
 ```
 
-CI (`.github/workflows/ci.yml`) runs the same checks on pull requests and on `main`.
+CI runs the same checks on pull requests and on `main` once `.github/workflows/ci.yml` is committed.
 
 ## Notes for contributors and coding agents
 
