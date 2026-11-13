@@ -1,7 +1,9 @@
+import { CardGrid } from "@/components/layout/link-card";
 import { PageHeader } from "@/components/layout/page-header";
-import { PageLinkList } from "@/components/layout/page-link-list";
 import { PageShell } from "@/components/layout/page-shell";
-import { getPaths } from "@/lib/content";
+import { PathCard } from "@/components/path/path-card";
+import { getPathLabs, getPaths } from "@/lib/content";
+import { pathStats } from "@/lib/derive";
 import { pageMetadata } from "@/lib/metadata";
 import { getSection } from "@/lib/sections";
 
@@ -17,13 +19,13 @@ export default function PathsPage() {
         description={section.description}
         breadcrumbs={[{ label: section.title }]}
       />
-      <PageLinkList
-        items={getPaths().map(({ slug, title, summary }) => ({
-          href: `/paths/${slug}`,
-          title,
-          summary,
-        }))}
-      />
+      <CardGrid>
+        {getPaths().map((path) => (
+          <li key={path.slug}>
+            <PathCard path={path} stats={pathStats(getPathLabs(path))} />
+          </li>
+        ))}
+      </CardGrid>
     </PageShell>
   );
 }

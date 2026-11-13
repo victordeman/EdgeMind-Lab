@@ -1,8 +1,17 @@
 import { notFound } from "next/navigation";
 
+import { LabBody } from "@/components/lab/mdx";
 import { PageHeader } from "@/components/layout/page-header";
 import { PageShell } from "@/components/layout/page-shell";
-import { getAiPage } from "@/lib/content";
+import { RelatedSections } from "@/components/layout/related-sections";
+import {
+  getAiPage,
+  getLabs,
+  getLabsForAiPage,
+  getPaths,
+  getResources,
+} from "@/lib/content";
+import { collectResources, pathsForTopic } from "@/lib/derive";
 import { pageMetadata } from "@/lib/metadata";
 import { getSection } from "@/lib/sections";
 
@@ -20,6 +29,13 @@ export const metadata = page
 export default function LanguageModelsPage() {
   if (!page) notFound();
 
+  const labs = getLabsForAiPage("language-models");
+  const labSlugs = new Set(labs.map((lab) => lab.slug));
+  // Resources that belong to one of this page's labs.
+  const resources = collectResources(getLabs(), getResources()).filter(
+    (entry) => entry.lab && labSlugs.has(entry.lab.slug),
+  );
+
   return (
     <PageShell>
       <PageHeader
@@ -29,6 +45,14 @@ export default function LanguageModelsPage() {
           { label: section.title, href: section.href },
           { label: page.title },
         ]}
+      />
+      <LabBody source={page.body} />
+      <RelatedSections
+        idPrefix="ai"
+        labs={labs}
+        paths={pathsForTopic(getPaths(), getLabs(), "language-models")}
+        resources={resources}
+        references={page.references}
       />
     </PageShell>
   );

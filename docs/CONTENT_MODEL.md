@@ -231,3 +231,19 @@ MDX stays on the default (no JavaScript expressions in the body). Do not add ima
 | `getPathMinutes(slug)`                                                           | Total minutes of a path's labs that are not planned                 |
 
 Each returned lab, path or page carries its frontmatter fields plus `slug` and `body` (the MDX source without frontmatter).
+
+## Derived listings (`lib/derive.ts`)
+
+No page keeps a hand-written list of labs. Listings are computed from lab, path and resource data, so adding a lab file makes it appear everywhere it belongs with no other edit.
+
+| Function                                      | Used for                                                                                       |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `pathStats(labs)`                             | Lab count, available count and total minutes of a path. Planned labs do not count towards time |
+| `firstAvailableLab(labs)`                     | Target of "Start path"                                                                         |
+| `pathsForHardware(...)`, `pathsForTopic(...)` | Related paths on hardware hubs and AI pages                                                    |
+| `recentLabs(labs, n)`                         | "Recently updated labs" on the home page (not planned, newest `updated` first)                 |
+| `collectResources(labs, resources)`           | `/resources`: standalone entries, lab downloads and a parts-list entry per lab with a BOM      |
+| `filterResources(entries, hardware)`          | Hardware filter on `/resources`                                                                |
+| `focusAreas(hubs, aiPages)`                   | The five quick-start cards on the home page                                                    |
+
+Hub and AI page MDX bodies supply only overview prose. Do not list labs, paths or resources in them.

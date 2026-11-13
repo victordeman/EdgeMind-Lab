@@ -3,6 +3,7 @@ import type {
   DownloadKind,
   Hardware,
   LabStatus,
+  ResourceCategory,
   Topic,
 } from "@/lib/types";
 
@@ -39,6 +40,14 @@ export const DOWNLOAD_KIND_LABELS: Record<DownloadKind, string> = {
   stl: "STL",
   diagram: "Diagram",
   doc: "Document",
+};
+
+export const RESOURCE_CATEGORY_LABELS: Record<ResourceCategory, string> = {
+  code: "Code",
+  stl: "STL files",
+  diagram: "Diagrams",
+  bom: "BOMs & shopping lists",
+  link: "Links",
 };
 
 /** "45 min", "1 h", "1 h 30 min". */
