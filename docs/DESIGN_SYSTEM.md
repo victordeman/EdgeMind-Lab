@@ -111,8 +111,15 @@ Write theme-specific styles with the `dark:` variant only when a token cannot ex
 | --------- | ------------------------------------------------------------------------------------------ |
 | `Button`  | Variants `default`, `outline`, `ghost`, `link`; sizes `default`, `sm`, `lg`, `icon`        |
 | `Sheet`   | Modal side panel built on the Base UI dialog. Used by `MobileNav`. No open/close animation |
+| `Badge`   | Small status and tag label. Colour never carries meaning alone: the text always says it    |
 
 These started from shadcn/ui and were trimmed. If you add another shadcn component, remove its animation classes and check that it imports `cn` from `@/lib/utils`.
+
+### Lab components (`components/lab/`)
+
+Used only by `/labs` and `/labs/[slug]`. `LabHeader`, `StatusNotice` (draft: "Not yet bench-verified"; planned: "Coming soon"), `LabOverview`, `BomTable`, `SafetyCallout`, `DownloadList`, `ReferenceList`, `LabNav`, `TableOfContents` (a `<details>` on mobile, sticky at `xl`) and the MDX components listed in `docs/CONTENT_MODEL.md`. `LabBrowser` and `LabFilters` are client components; the static `/labs` page shows the full list until they hydrate, so it works without JavaScript.
+
+Code blocks use Shiki with the `github-light-high-contrast` and `github-dark-high-contrast` themes, switched by CSS variables (`--shiki-light`, `--shiki-dark`). Heading anchors use the `heading-anchor` class.
 
 ## Usage rules
 

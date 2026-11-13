@@ -167,17 +167,51 @@ Optional introduction: one short paragraph of context.
 
 ## Steps
 
-1. First step.
-2. Second step.
+<Steps>
+<Step title="Set up the hardware">
+
+Instruction text. Put every program in `public/code/<lab-slug>/` and show it with `<CodeFile>`.
+
+<CodeFile file="/code/<lab-slug>/example.ino" />
+
+</Step>
+</Steps>
 
 ## Expected outcome
 
-What the student should see when the lab works.
+<ExpectedOutcome>
+  What the student should see when the lab works.
+</ExpectedOutcome>
 
 ## Troubleshooting
 
-- **Symptom.** Likely cause and what to check.
+<Troubleshooting>
+  <Issue symptom="What the student sees" cause="Likely cause">
+    What to check or change.
+  </Issue>
+</Troubleshooting>
 ```
+
+### Lab body rules
+
+The page renders the header, overview, parts list, safety notes, downloads, references and previous/next links from frontmatter. The MDX body holds only the teaching text. `npm run validate:content` enforces:
+
+- No `# H1` in the body. The page title is the only H1.
+- At most one `<Steps>` block. Each `<Step title="…">` gets the id `step-N` and appears in the table of contents.
+- Every `<CodeFile file="…">` points to an existing file under `public/code/`. The page reads the file at build time, so the shown code and the download are the same bytes.
+- Headings are `##` and `###`, in order.
+
+### Lab MDX components (`components/lab/mdx.tsx`)
+
+| Component                      | Use                                                                            |
+| ------------------------------ | ------------------------------------------------------------------------------ |
+| `Steps`, `Step title`          | The numbered procedure                                                         |
+| `Wiring`, `Connection from/to` | A wiring table. Optional `diagram` and required `alt` for an image that exists |
+| `CodeFile file`                | Highlighted code from `public/code/` with copy and download                    |
+| `ExpectedOutcome`              | The result the student should see                                              |
+| `Troubleshooting`, `Issue`     | Symptom, cause and fix entries                                                 |
+
+MDX stays on the default (no JavaScript expressions in the body). Do not add images or diagrams that do not exist.
 
 ## Loader API (`lib/content.ts`)
 
@@ -192,6 +226,8 @@ What the student should see when the lab works.
 | `getPathLabs(path)`                                                              | A path's labs in teaching order, including planned ones             |
 | `getPathForLab(slug)`                                                            | The path that contains a lab                                        |
 | `getNextPrevLab(slug)`                                                           | `{ previous?, next? }` within the lab's path, skipping planned labs |
+| `getRelatedLabs(slug, limit)`                                                    | Written labs that share hardware or topics, never planned ones      |
+| `readPublicTextFile(href)`, `getPublicFileSize(href)`                            | Text and byte size of a file under `public/`                        |
 | `getPathMinutes(slug)`                                                           | Total minutes of a path's labs that are not planned                 |
 
 Each returned lab, path or page carries its frontmatter fields plus `slug` and `body` (the MDX source without frontmatter).

@@ -106,3 +106,47 @@
     outline-offset: 2px;
   }
 }
+
+/*
+ * Code blocks. Shiki writes both themes as CSS variables (--shiki-light,
+ * --shiki-dark and their -bg twins); these rules pick one per theme.
+ */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+}
+.shiki {
+  background-color: var(--shiki-light-bg);
+}
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark);
+}
+.dark .shiki {
+  background-color: var(--shiki-dark-bg);
+}
+.shiki {
+  margin: 0;
+  overflow-x: auto;
+  padding: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  tab-size: 4;
+}
+.shiki code {
+  font-family: var(--font-mono);
+}
+/* Fenced code written directly in a lab body, outside <CodeFile>. */
+article > div > .shiki {
+  border: 1px solid var(--input);
+  border-radius: var(--radius);
+}
+
+/* Anchor links that rehype-autolink-headings wraps around heading text. */
+.heading-anchor {
+  color: inherit;
+  text-decoration: none;
+}
+.heading-anchor:hover {
+  text-decoration: underline;
+}

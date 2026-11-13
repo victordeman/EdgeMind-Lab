@@ -17,26 +17,157 @@ prerequisites:
 bom:
   - item: Raspberry Pi board with a 40-pin GPIO header
     quantity: 1
+    notes: Check your kit for the model.
   - item: Solderless breadboard
     quantity: 1
   - item: LED
     quantity: 1
-  - item: Current-limiting resistor
+  - item: Current-limiting resistor for the LED
     quantity: 1
-    notes: The value is given in the lab steps.
+    notes: Use the value your kit or the LED's datasheet specifies for a 3.3 V supply.
   - item: Push button
     quantity: 1
   - item: Jumper wires (female to male)
     quantity: 4
 safety:
   - Shut the Pi down and remove power before changing any wiring.
-  - Never connect a GPIO pin directly to a 5V pin; GPIO pins use 3.3V logic.
-downloads: []
+  - Never connect a GPIO pin directly to a 5V pin; GPIO pins use 3.3V logic and are not 5V tolerant.
+  - Always put a resistor in series with the LED.
+downloads:
+  - label: led_blink.py (blink an LED)
+    file: /code/rpi-gpio-python/led_blink.py
+    kind: code
+  - label: led_button.py (LED follows a button)
+    file: /code/rpi-gpio-python/led_button.py
+    kind: code
 references:
   - label: gpiozero documentation
     url: https://gpiozero.readthedocs.io/en/stable/
+  - label: gpiozero – Basic recipes (pin numbering, LED, Button)
+    url: https://gpiozero.readthedocs.io/en/stable/recipes.html
+  - label: gpiozero – Input devices (Button wiring)
+    url: https://gpiozero.readthedocs.io/en/stable/api_input.html
+  - label: Raspberry Pi documentation – 40-pin GPIO header
+    url: https://www.raspberrypi.com/documentation/hardware/raspberrypi/gpio
   - label: Raspberry Pi documentation – Raspberry Pi hardware
     url: https://www.raspberrypi.com/documentation/computers/raspberry-pi.html
-status: planned
+status: draft
 updated: 2026-11-13
 ---
+
+## Steps
+
+<Steps>
+
+<Step title="Check that gpiozero is available">
+
+Open a terminal on the Pi and run:
+
+```bash
+python3 -c "import gpiozero; print('gpiozero is available')"
+```
+
+If it prints the message, continue. If you see `ModuleNotFoundError`, follow the installation guide in the gpiozero documentation, then run the command again.
+
+</Step>
+
+<Step title="Learn the pin numbers">
+
+The 40-pin header has power, ground and GPIO pins. In the Raspberry Pi documentation, pins 9 and 14 are GND, pin 11 is GPIO17 and pin 13 is GPIO27. The GPIO pins work at 3.3 V and are not 5 V tolerant.
+
+gpiozero uses the **GPIO number**, not the physical pin position. An LED on GPIO17 is `LED(17)`, not `LED(11)`.
+
+</Step>
+
+<Step title="Wire the LED and the button">
+
+Shut the Pi down and remove power first. Then build the circuit on the breadboard:
+
+<Wiring>
+  <Connection
+    from="Physical pin 11 (GPIO17)"
+    to="One end of the LED resistor"
+    notes="Use the resistor value from your kit or the LED's datasheet."
+  />
+  <Connection
+    from="Other end of the resistor"
+    to="LED long leg (anode)"
+    notes="The long leg is the positive one."
+  />
+  <Connection from="LED short leg (cathode)" to="Physical pin 9 (GND)" />
+  <Connection
+    from="Physical pin 13 (GPIO27)"
+    to="Push button, one leg"
+    notes="Use two legs that the button connects when pressed; check your kit's guide."
+  />
+  <Connection
+    from="Push button, other leg"
+    to="Physical pin 14 (GND)"
+    notes="gpiozero's Button expects the other side to go to ground."
+  />
+</Wiring>
+
+Check every wire against the table before you reconnect power.
+
+</Step>
+
+<Step title="Blink the LED">
+
+Save this program as `led_blink.py` (or download it), then run it with `python3 led_blink.py`. Stop it with **Ctrl+C**.
+
+<CodeFile file="/code/rpi-gpio-python/led_blink.py" />
+
+`led.blink()` runs in the background, so `pause()` keeps the script alive. Change `on_time` and `off_time` and run it again.
+
+</Step>
+
+<Step title="Light the LED with the button">
+
+Save this program as `led_button.py`, run it with `python3 led_button.py`, and hold the button down.
+
+<CodeFile file="/code/rpi-gpio-python/led_button.py" />
+
+`button.when_pressed = led.on` hands gpiozero the function to call. Do not write `led.on()` with brackets: that would call the function once, straight away.
+
+</Step>
+
+<Step title="Make it yours">
+
+Change the program so that each press toggles the LED instead of lighting it only while the button is held. Look up `toggle()` in the gpiozero documentation for the LED class.
+
+</Step>
+
+</Steps>
+
+## Expected outcome
+
+<ExpectedOutcome>
+
+`led_blink.py` makes the LED blink at the rate you set. `led_button.py` lights the LED while you hold the button and switches it off when you let go. You can explain why the code says `LED(17)` for the LED wired to physical pin 11.
+
+</ExpectedOutcome>
+
+## Troubleshooting
+
+<Troubleshooting>
+  <Issue
+    symptom="ModuleNotFoundError: No module named 'gpiozero'"
+    cause="The gpiozero library is not installed for the Python you are running."
+    fix="Follow the installation guide in the gpiozero documentation, then run the check from the first step again."
+  />
+  <Issue
+    symptom="The program ends at once and the LED does nothing"
+    cause="A script that reaches its last line ends, and the GPIO pins may be reset."
+    fix="Keep the script running with pause() from the signal module, as the downloadable programs do."
+  />
+  <Issue
+    symptom="The LED never lights"
+    cause="The LED is the wrong way round, or the code uses the wrong pin number."
+    fix="Shut the Pi down and put the long leg on the resistor side. Check that the code uses GPIO numbers: GPIO17 is LED(17), not LED(11)."
+  />
+  <Issue
+    symptom="The button does nothing, or the LED stays on"
+    cause="The button is wired to the wrong pins, or to a pair of legs that the button does not connect when pressed."
+    fix="Connect one leg to GPIO27 (pin 13) and another to GND (pin 14). If nothing changes, move the wires to a different pair of legs; your kit's guide shows which legs the button connects."
+  />
+</Troubleshooting>
