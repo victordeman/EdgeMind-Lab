@@ -1,0 +1,19 @@
+---
+title: AI Agents
+summary: Turn a local language model into an agent that calls tools in a loop, then connect those tools to real hardware.
+difficulty: intermediate
+order: 4
+outcomes:
+  - Explain how an agent loop differs from a single model call.
+  - Define tools and let a model call them safely.
+  - Connect an agent to sensors and actuators with clear limits on what it may do.
+modules:
+  - title: The agent loop
+    summary: Build the loop of model call, tool call and result by hand.
+    labs: [rpi-first-agent]
+  - title: Agents and hardware
+    summary: Give the agent tools that read and change the physical world.
+    labs: [agent-sensors-actuators]
+---
+
+An agent is a language model placed in a loop with tools it is allowed to call. This path builds that loop from plain Python so that every step is visible, without an agent framework. The final module connects the loop to GPIO hardware, which is where the Arduino, Raspberry Pi and language model paths meet.

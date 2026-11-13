@@ -1,0 +1,19 @@
+---
+title: Local Language Models
+summary: Run language models on a Raspberry Pi with Ollama and learn what small hardware can and cannot do.
+difficulty: intermediate
+order: 3
+outcomes:
+  - Install and run a language model locally with Ollama.
+  - Call a local model from the command line and from Python.
+  - Reason about the trade-off between model size, memory and speed on edge hardware.
+modules:
+  - title: Running a model
+    summary: Install Ollama, pull a model and talk to it.
+    labs: [rpi-local-llm-ollama]
+  - title: Using a model from code
+    summary: Move from the chat prompt to the HTTP API.
+    labs: [llm-python-api]
+---
+
+Language models do not have to run in a data centre. This path installs Ollama on a Raspberry Pi and runs a small model with no cloud service involved, so students can see directly how memory and processor limits shape what a model can do. It prepares the ground for the AI Agents path, where the model is given tools to call.
